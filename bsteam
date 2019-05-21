@@ -1,5 +1,4 @@
 #!/bin/sh
-script_version='0.0.1'
 
 bsteam_config="$HOME/.config/bsteam/"
 steamcred_file="$bsteam_config/credentials.txt"
@@ -60,7 +59,9 @@ print_error() {
 }
 
 update_script() {
-    echo 'TODO update script'
+    update_url='https://raw.githubusercontent.com/dargonforce/bsteam/master/bsteam'
+    target_file=$(realpath "$0")
+    curl $update_url -o $target_file
 }
 
 invoke() {
