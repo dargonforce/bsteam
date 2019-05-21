@@ -18,9 +18,16 @@ if [ ! -e "$steamcmd" ]; then
     curl -sqL "$steamcmd_url" | tar -zxf - -C "$steamcmd_dir"
 fi
 
+parse_app() {
+    unset retval
+    echo 'TODO appid translation from nametable'
+    retval=$1
+}
+
 update() {
-    app=$1
-    echo 'TODO app id translation'
+    parse_app $1
+    app=$retval
+    unset retval
     $steamcmd +login $steam_user $steam_passwd +app_update $app +quit
 }
 
@@ -29,8 +36,9 @@ install() {
 }
 
 uninstall() {
-    app=$1
-    echo 'TODO app id translation'
+    parse_app $1
+    app=$retval
+    unset retval
     $steamcmd +login $steam_user $steam_passwd +app_uninstall $app
 }
 
@@ -47,7 +55,17 @@ EOF
 }
 
 print_help() {
-    echo 'TODO help text'
+    echo "bsteam can perform one of the following commands"
+    echo ""
+    echo "update.........................install/update an <appid>"
+    echo "install........................install/update an <appid>"
+    echo "uninstall...........................uninstall an <appid>"
+    echo "ping.................................test login and quit"
+    echo "print_help................................show this text"
+    echo "update_script.........................update this script"
+    echo "print_version..........................print the version"
+    echo ""
+    echo "An <appid> can be a single numerical steam appid"
 }
 
 ping() {
