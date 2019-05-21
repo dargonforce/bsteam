@@ -57,6 +57,19 @@ steam_passwd=$steam_passwd
 EOF
 }
 
+run() {
+    parse_app $1
+    app=$retval
+    unset retval
+    dir=$(dirname $(realpath "$0"))
+    exe="$dir/run_$app"
+    if [ -f "$exe" ]; then
+        $exe
+    else
+        print_error "No $exe found"
+    fi
+}
+
 print_help() {
     echo "bsteam can perform one of the following commands"
     echo ""
@@ -67,8 +80,10 @@ print_help() {
     echo "print_help................................show this text"
     echo "update_script.........................update this script"
     echo "print_version..........................print the version"
+    echo "run.......................................run an <appid>"
     echo ""
-    echo "An <appid> can be a single numerical steam appid"
+    echo "An <appid> can be a single numerical steam appid or a hardcoded
+    translation"
 }
 
 ping() {
@@ -93,7 +108,7 @@ print_version() {
 invoke() {
     cmd=$1
     case $cmd in
-        update|install|uninstall|ping|print_help|update_script|print_version)
+        update|install|uninstall|ping|print_help|update_script|print_version|run)
 	    $@
 	    ;;
 	*)
