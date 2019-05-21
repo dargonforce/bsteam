@@ -1,4 +1,5 @@
 #!/bin/sh
+bsteam_version='1.0.0'
 
 bsteam_config="$HOME/.config/bsteam/"
 steamcred_file="$bsteam_config/credentials.txt"
@@ -64,10 +65,14 @@ update_script() {
     curl $update_url -o $target_file
 }
 
+print_version() {
+    echo "$bsteam_version"
+}
+
 invoke() {
     cmd=$1
     case $cmd in
-        update|install|uninstall|ping|print_help|update_script)
+        update|install|uninstall|ping|print_help|update_script|print_version)
 	    $@
 	    ;;
 	*)
