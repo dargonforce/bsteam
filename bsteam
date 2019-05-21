@@ -1,0 +1,85 @@
+#!/bin/sh
+
+bsteam_config="$HOME/.config/bsteam/"
+steamcred_file="$bsteam_config/credentials.txt"
+
+if [ -e "$steamcred_file" ]; then
+    . $steamcred_file
+fi
+
+steamcmd_url="https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz"
+steamcmd_dir="$bsteam_config/steamcmd"
+steamcmd="$steamcmd_dir/steamcmd.sh"
+
+if [ ! -e "$steamcmd" ]; then
+    echo "Downloading steamcmd..."
+    mkdir -p "$steamcmd_dir"
+    curl -sqL "$steamcmd_url" | tar -zxf - -C "$steamcmd_dir"
+fi
+
+update() {
+    app=$1
+    echo 'TODO app id translation'
+    $steamcmd +login $steam_user $steam_passwd +app_update $app +quit
+}
+
+install() {
+    update $@
+}
+
+uninstall() {
+    app=$1
+    echo 'TODO app id translation'
+    $steamcmd +login $steam_user $steam_passwd +app_uninstall $app
+}
+
+read_credentials() {
+    echo "Steam username? "
+    read steam_user
+    echo "Steam passwd? "
+    read steam_passwd
+    touch $steamcred_file
+    cat << EOF > $steamcred_file
+steam_user=$steam_user
+steam_passwd=$steam_passwd
+EOF
+}
+
+print_help() {
+    echo 'TODO help text'
+}
+
+ping() {
+    $steamcmd +login $steam_user $steam_passwd +quit
+}
+
+print_error() {
+    echo $1
+    exit 1
+}
+
+update_script() {
+    echo 'TODO update script'
+}
+
+invoke() {
+    cmd=$1
+    case $cmd in
+        update|install|uninstall|ping|print_help|update_script)
+	    $@
+	    ;;
+	*)
+	    print_error 'Invalid command'
+	    ;;
+    esac
+}
+
+if [ -z "$steam_user" ] || [ -z "$steam_passwd" ]; then
+    read_credentials
+fi
+
+if [ "$#" -eq "0" ]; then
+    invoke print_help
+else
+    invoke $@
+fi
