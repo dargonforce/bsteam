@@ -20,8 +20,11 @@ fi
 
 parse_app() {
     unset retval
-    echo 'TODO appid translation from nametable'
-    retval=$1
+    case $1 in
+        starbound) retval=211820;;
+        terraria)  retval=105600;;
+        *)         retval=$1;;
+    esac
 }
 
 update() {
